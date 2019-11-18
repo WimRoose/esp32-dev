@@ -17,6 +17,12 @@ d = dht.DHT11(machine.Pin(17))
 # Webapp part
 #
 
+def update(req, resp):
+    from ota_updater import OTAUpdater
+    o = OTAUpdater('https://github.com/WimRoose/esp32-dev')
+    o.check_for_update_to_install_during_next_reboot()
+    machine.reset()
+
 
 def temperature(req, resp):
     
@@ -66,7 +72,7 @@ ROUTES = [
     ("/", index),
     ("/events", events),
     ("/temperature", temperature),
-    
+    ("/update", update),
 ]
 
 #
