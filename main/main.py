@@ -19,10 +19,8 @@ d = dht.DHT11(machine.Pin(17))
 
 
 def temperature(req, resp):
-    d.measure()
-    temp = d.temperature()
-    humidity = d.humidity()
-    jsonData = {"temperature":temp,"humidity": humidity}
+    
+    jsonData = {"temperature":27,"humidity": 90}
     encoded = ujson.dumps(jsonData)
     yield from picoweb.start_response(resp, content_type = "application/json")
     yield from resp.awrite(encoded)
