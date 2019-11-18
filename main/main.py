@@ -17,7 +17,7 @@ d = dht.DHT11(machine.Pin(17))
 # Webapp part
 #
 
-def reset(req, resp)::
+def reset(req, resp):
     machine.reset()
 
 
