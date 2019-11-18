@@ -5,11 +5,11 @@ import usocket
 import os
 import gc
 import machine
-
+from main.config import REPO
 
 class OTAUpdater:
 
-    def __init__(self, github_repo, module='', main_dir='main'):
+    def __init__(self, github_repo=REPO, module='', main_dir='main'):
         self.http_client = HttpClient()
         self.github_repo = github_repo.rstrip('/').replace('https://github.com', 'https://api.github.com/repos')
         self.main_dir = main_dir
@@ -43,7 +43,7 @@ class OTAUpdater:
             return "Found new version"
         else:                 
             return "No new version"
-            
+
     def download_and_install_update_if_available(self, ssid, password):
         if 'next' in os.listdir(self.module):
             if '.version_on_reboot' in os.listdir(self.modulepath('next')):

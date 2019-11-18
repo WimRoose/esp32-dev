@@ -2,7 +2,7 @@ from main.ota_updater import OTAUpdater
 import utime
 
 def download_and_install_update_if_available():
-    ota_updater = OTAUpdater('https://github.com/WimRoose/esp32-dev')
+    ota_updater = OTAUpdater()
     ota_updater.download_and_install_update_if_available('Los Borrachos', 'xxxxxxxxxxxx')
 
 def start():
