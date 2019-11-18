@@ -18,7 +18,7 @@ d = dht.DHT11(machine.Pin(17))
 #
 
 def update(req, resp):
-    from ota_updater import OTAUpdater
+    from main.ota_updater import OTAUpdater
     o = OTAUpdater('https://github.com/WimRoose/esp32-dev')
     result = o.check_for_update_to_install_during_next_reboot()
     yield from resp.awrite("""\
