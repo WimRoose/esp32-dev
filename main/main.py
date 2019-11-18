@@ -7,7 +7,7 @@ def download_and_install_update_if_available():
 
 def start():
 	while True:
-		print("helloo")
+		print("helloo-")
 		utime.sleep(2)
     # your custom code goes here. Something like this: ...
     # from main.x import YourProject
