@@ -17,6 +17,10 @@ d = dht.DHT11(machine.Pin(17))
 # Webapp part
 #
 
+def reset(req, resp)::
+    machine.reset()
+
+
 def update(req, resp):
     from main.ota_updater import OTAUpdater
     o = OTAUpdater('https://github.com/WimRoose/esp32-dev')
@@ -41,7 +45,7 @@ source.onerror = function(error) {
 </body>
 </html>
 """ % result)
-    machine.reset()
+    
 
 
 def temperature(req, resp):
@@ -93,6 +97,7 @@ ROUTES = [
     ("/events", events),
     ("/temperature", temperature),
     ("/update", update),
+    ("/reset", reset),
 ]
 
 #
