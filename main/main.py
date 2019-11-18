@@ -20,7 +20,27 @@ d = dht.DHT11(machine.Pin(17))
 def update(req, resp):
     from ota_updater import OTAUpdater
     o = OTAUpdater('https://github.com/WimRoose/esp32-dev')
-    o.check_for_update_to_install_during_next_reboot()
+    result = o.check_for_update_to_install_during_next_reboot()
+    yield from resp.awrite("""\
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+var source = new EventSource("events");
+source.onmessage = function(event) {
+    document.getElementById("result").innerHTML += event.data + "<br>";
+}
+source.onerror = function(error) {
+    console.log(error);
+    document.getElementById("result").innerHTML += "EventSource error:" + error + "<br>";
+}
+</script>
+</head>
+<body>
+<div id="result">%s</div>
+</body>
+</html>
+""" % result)
     machine.reset()
 
 
