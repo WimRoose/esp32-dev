@@ -25,26 +25,10 @@ def update(req, resp):
     from main.ota_updater import OTAUpdater
     o = OTAUpdater('https://github.com/WimRoose/esp32-dev')
     result = o.check_for_update_to_install_during_next_reboot()
-    yield from resp.awrite("""\
-<!DOCTYPE html>
-<html>
-<head>
-<script>
-var source = new EventSource("events");
-source.onmessage = function(event) {
-    document.getElementById("result").innerHTML += event.data + "<br>";
-}
-source.onerror = function(error) {
-    console.log(error);
-    document.getElementById("result").innerHTML += "EventSource error:" + error + "<br>";
-}
-</script>
-</head>
-<body>
-<div id="result">%s</div>
-</body>
-</html>
-""" % result)
+    jsonData = {"update":result}
+    encoded = ujson.dumps(jsonData)
+    yield from picoweb.start_response(resp, content_type = "application/json")
+    yield from resp.awrite(encoded)
     
 
 
