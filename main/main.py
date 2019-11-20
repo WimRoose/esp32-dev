@@ -9,9 +9,37 @@ import picoweb
 import machine
 import dht
 import ujson
+import neopixel
+
+n = 183
+p = 23
+np = neopixel.NeoPixel(machine.Pin(p), n)
 
 event_sinks = set()
 d = dht.DHT11(machine.Pin(17))
+
+myrandom = (255,0,0)
+
+def set_color(req, resp):
+    global myrandom
+    if req.method == "POST":
+        yield from req.read_form_data()
+    else:  # GET, apparently
+        # Note: parse_qs() is not a coroutine, but a normal function.
+        # But you can call it using yield from too.
+        req.parse_qs()
+
+    # Whether form data comes from GET or POST request, once parsed,
+    # it's available as req.form dictionary
+    myrandom = (int(req.form["r"]),int(req.form["g"]),int(req.form["b"]))
+    for i in range (0,n):
+        #myrandom = (random.randint(0,256),random.randint(0,256),random.randint(0,256))
+        #myrandom = (255,255,255)
+        np[i] = myrandom
+    np.write()
+    yield from picoweb.start_response(resp)
+    yield from resp.awrite("r: %s g: %s b: %s" % (req.form["r"],req.form["g"],req.form["b"]))
+
 
 #
 # Webapp part
@@ -82,6 +110,8 @@ ROUTES = [
     ("/temperature", temperature),
     ("/update", update),
     ("/reset", reset),
+    ("/setled", set_color),
+    
 ]
 
 #
@@ -113,7 +143,9 @@ def push_count():
         i += 1
         await uasyncio.sleep(1)
 
-
+for i in range (0,n):
+        np[i] = myrandom
+np.write()
 loop = uasyncio.get_event_loop()
 #loop.create_task(push_count())
 #loop.create_task(set_led())
