@@ -62,7 +62,10 @@ def update(req, resp):
 
 def temperature(req, resp):
     
-    jsonData = {"temperature":27,"humidity": 90}
+    d.measure()
+    temp = d.temperature()
+    humidity = d.humidity()
+    jsonData = {"temperature":temp,"humidity": humidity}
     encoded = ujson.dumps(jsonData)
     yield from picoweb.start_response(resp, content_type = "application/json")
     yield from resp.awrite(encoded)
