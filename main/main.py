@@ -16,7 +16,7 @@ p = 23
 np = neopixel.NeoPixel(machine.Pin(p), n)
 
 event_sinks = set()
-d = dht.DHT11(machine.Pin(17))
+d = dht.DHT11(machine.Pin(22))
 
 myrandom = (255,0,0)
 
