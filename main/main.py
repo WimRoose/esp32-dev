@@ -10,13 +10,19 @@ import machine
 import dht
 import ujson
 import neopixel
+import onewire, ds18x20, time
 
 n = 183
 p = 23
 np = neopixel.NeoPixel(machine.Pin(p), n)
 
+ds_pin = machine.Pin(22)
+ds_sensor = ds18x20.DS18X20(onewire.OneWire(ds_pin))
+roms = ds_sensor.scan()
+
 event_sinks = set()
-d = dht.DHT11(machine.Pin(22))
+
+#d = dht.DHT11(machine.Pin(22))
 
 myrandom = (255,0,0)
 
@@ -60,7 +66,7 @@ def update(req, resp):
     
 
 
-def temperature(req, resp):
+def temperature_dht(req, resp):
     
     d.measure()
     temp = d.temperature()
@@ -69,7 +75,16 @@ def temperature(req, resp):
     encoded = ujson.dumps(jsonData)
     yield from picoweb.start_response(resp, content_type = "application/json")
     yield from resp.awrite(encoded)
-    
+
+def temperature(req, resp):
+    ds_sensor.convert_temp()
+    time.sleep_ms(750)
+    for rom in roms:
+        temp = ds_sensor.read_temp(rom)
+    jsonData = {"temperature":str(temp),"humidity": '0'}
+    encoded = ujson.dumps(jsonData)
+    yield from picoweb.start_response(resp, content_type = "application/json")
+    yield from resp.awrite(encoded)
 
 def index(req, resp):
     #global random
