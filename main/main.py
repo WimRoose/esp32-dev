@@ -11,6 +11,7 @@ import dht
 import ujson
 import neopixel
 import onewire, ds18x20, time
+import upip
 
 n = 183
 p = 23
@@ -25,6 +26,8 @@ event_sinks = set()
 #d = dht.DHT11(machine.Pin(22))
 
 myrandom = (255,0,0)
+is_active = False
+
 
 def set_color(req, resp):
     global myrandom
@@ -129,6 +132,8 @@ ROUTES = [
     ("/update", update),
     ("/reset", reset),
     ("/setled", set_color),
+    ("/led", led),
+    ("/led/color", led_color),
     
 ]
 

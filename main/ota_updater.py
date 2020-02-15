@@ -5,6 +5,7 @@ import usocket
 import os
 import gc
 import machine
+import upip
 from main.config import REPO
 
 class OTAUpdater:
@@ -28,6 +29,8 @@ class OTAUpdater:
         print('network config:', sta_if.ifconfig())
 
     def check_for_update_to_install_during_next_reboot(self):
+        print("installing ujson")
+        upip.install('ujson')
         current_version = self.get_version(self.modulepath(self.main_dir))
         latest_version = self.get_latest_version()
 
