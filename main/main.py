@@ -11,7 +11,7 @@ import dht
 import ujson
 import neopixel
 import onewire, ds18x20, time
-import upip
+
 
 n = 183
 p = 23
@@ -49,6 +49,22 @@ def set_color(req, resp):
     yield from picoweb.start_response(resp)
     yield from resp.awrite("r: %s g: %s b: %s" % (req.form["r"],req.form["g"],req.form["b"]))
 
+
+def led(req, resp):
+    
+    jsonData = {"is_active": is_active}
+    encoded = ujson.dumps(jsonData)
+    yield from picoweb.start_response(resp, content_type = "application/json")
+    #yield from resp.awrite(_key)
+    yield from resp.awrite(encoded)
+
+def led_color(req, resp):
+    
+    jsonData = {"color": 'red'}
+    encoded = ujson.dumps(jsonData)
+    yield from picoweb.start_response(resp, content_type = "application/json")
+    #yield from resp.awrite(_key)
+    yield from resp.awrite(encoded)
 
 #
 # Webapp part
