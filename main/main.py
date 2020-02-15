@@ -52,7 +52,33 @@ def set_color(req, resp):
 
 def led(req, resp):
     
-    jsonData = {"is_active": is_active}
+    global is_active
+    if req.method == "POST":
+        yield from req.read_form_data()
+        #print(req.form)
+        # https://stackoverflow.com/questions/30362391/how-do-you-find-the-first-key-in-a-dictionary
+        _key = next(iter(req.form.keys()))
+        json = ujson.loads(_key)
+        #print(json)
+        is_active = json['active']
+        jsonData = {"is_active": is_active}
+    
+    else:
+        jsonData = {"is_active": is_active}
+
+    if is_active:
+        for i in range (0,n):
+            #myrandom = (random.randint(0,256),random.randint(0,256),random.randint(0,256))
+            #myrandom = (255,255,255)
+            np[i] = myrandom
+        np.write()
+    else:
+        for i in range (0,n):
+            #myrandom = (random.randint(0,256),random.randint(0,256),random.randint(0,256))
+            #myrandom = (255,255,255)
+            np[i] = (0,0,0)
+        np.write()
+    print(jsonData)
     encoded = ujson.dumps(jsonData)
     yield from picoweb.start_response(resp, content_type = "application/json")
     #yield from resp.awrite(_key)
