@@ -48,18 +48,16 @@ class OTAUpdater:
             return "No new version"
 
     def download_and_install_update_if_available(self, ssid, password):
-        # try:
-        #     os.stat('/lib/lib/ultrajson.h')
-        #     print("ujson already installed")
-        # except:
-        #     print("installing ujson")
-        #     upip.install('ujson')
-        if not 'picoweb' in sys.modules:
-            print("installing picoweb")
+        
+        # check if picoweb already installed
+        try:
+            os.stat('/lib/picoweb')
+            print("picoweb already installed")
+        except:
+            print("installing picoweb and uasyncio")
             upip.install('picoweb')
-        if not 'uasyncio.core' in sys.modules:
-            print("installing uasyncio")
             upip.install('uasyncio')
+        
         
         if 'next' in os.listdir(self.module):
             if '.version_on_reboot' in os.listdir(self.modulepath('next')):
